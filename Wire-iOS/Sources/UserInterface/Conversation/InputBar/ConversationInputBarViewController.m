@@ -138,6 +138,7 @@
 
 @property (nonatomic) NSSet *typingUsers;
 @property (nonatomic) id conversationObserverToken;
+@property (nonatomic) BOOL currentUserIsTyping;
 
 @property (nonatomic) UIViewController *inputController;
 
@@ -806,9 +807,11 @@
     
     if (textView.text.length > 0) {
         [self.conversation setIsTyping:YES];
+        self.currentUserIsTyping = YES;
     }
     else {
         [self.conversation setIsTyping:NO];
+        self.currentUserIsTyping = NO;
     }
     
     [self updateRightAccessoryView];
@@ -1105,7 +1108,7 @@
 
 @implementation ConversationInputBarViewController (ZMTypingChangeObserver)
 
-- (void)typingDidChangeWithConversation:(ZMConversation *)conversation typingUsers:(NSSet<ZMUser *> *)typingUsers
+- (void)typingDidChangeWithConversation:(ZMConversation *)conversation typingUsers:(NSSet<ZMUser *> *)typingUsers sender:(ZMUser*)sender
 {
     NSPredicate *filterSelfUserPredicate = [NSPredicate predicateWithFormat:@"SELF != %@", [ZMUser selfUser]];
     NSSet *filteredSet = [typingUsers filteredSetUsingPredicate:filterSelfUserPredicate];
